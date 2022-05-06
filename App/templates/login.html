@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block body-content %}
+<div class="container">
+    <form  action="/home/" method="POST">
+        {% if messages %}
+        {% for message in messages %}
+
+                        {{ message }}
+        {% endfor %}
+        {%endif%}
+                              {% csrf_token %}
+
+                            {{form.as_p}}
+
+                    <div class="d-flex justify-content-center">
+                      <button type="submit" class="btn btn-success">login</button>
+                    </div>
+                  </form>
+
+        <div class="m-2">
+            <center><h7 class="text-success">Reset Password - </h7><a href="{% url 'password_reset' %}">click here</a></center>
+
+
+        </div>
+
+
+
+
+</div>
+{% endblock body-content %}

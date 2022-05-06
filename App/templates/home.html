@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block body-content %}
+
+{% if request.user.is_authenticated %}
+    <button><a href="{% url 'logout' %}">logout</a></button>
+    <button><a href="{% url 'ChangePassView' %}">ChangePassView</a></button>
+
+
+{% endif %}
+{% endblock body-content %}
