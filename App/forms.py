@@ -5,6 +5,7 @@ from .models import Todo
 
 
 
+
 #authentication Part
 class registerview(UserCreationForm):
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Enter Password'}))
@@ -38,3 +39,12 @@ class setresetpass(SetPasswordForm):
     new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Re-Enter New Password"}))
 
 #end auth
+
+
+
+
+class todoform(forms.ModelForm):
+    class Meta:
+        model = Todo
+        fields=['title','descripation','date']
+

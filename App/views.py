@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from .forms import registerview, loginview, changepass,passreset,setresetpass
+from .forms import registerview, loginview, changepass, passreset, setresetpass, todoform
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth import login as auth_login
+from .models import Todo
 
 
 # Create your views here.
@@ -82,50 +83,43 @@ def ChangePassView(request):
     return render(request, "changepassword.html")
 
 
-#
-#
-# def get_form_kwargs(self):
-#     kwargs = super().get_form_kwargs()
-#     kwargs['user'] = self.user
-#     return kwargs
-
-
 # forntend side views
 
 def home(request):
-    return render(request, "home.html")
+    if request.method == 'POST':
 
+        form = todoform(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "saved sussessfully")
+            return redirect("home")
+        else:
+            form = todoform(request.POST)
+            return redirect("home")
 
+    else:
+     form = todoform(request.POST)
+    data = Todo.objects.all()
+    con = {"form": form,"data":data}
+    return render(request, "home.html", con)
 
+def update(request,id):
+    data = Todo.objects.all()
+    getdata=Todo.objects.get(id=id)
+    if request.method=="POST":
+        form = todoform(request.POST,instance=getdata)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"update successfully")
+            return redirect("home")
+        else:
+            form =todoform(instance=getdata)
+    else:
+        form = todoform(instance=getdata)
+    con={"data":data,"form":form}
+    return render(request,"home.html",con)
 
-
-
-
-
-
-
-
-
-
-
-
-#
-# def password_reset_request(request):
-# 	if request.method == "POST":
-# 		form = passreset(request.POST)
-# 		if form.is_valid():
-# 			data = passreset.cleaned_data['email']
-# 			associated_users = User.objects.filter(Q(email=data))
-# 			if associated_users.exists():
-# 				for user in associated_users:
-# 					subject = "Password Reset Requested"
-# 					email_template_name = "password_reset.txt"
-# 					email = render_to_string(email_template_name)
-# 					try:
-# 						send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
-# 					except BadHeaderError:
-# 						return HttpResponse('Invalid header found.')
-# 					return redirect ("/password_reset/done/")
-# 	password_reset_form = PasswordResetForm()
-# 	return render(request=request, template_name="main/password/password_reset.html", context={"password_reset_form":password_reset_form})
-#
+def delete(request,id):
+    data=Todo.objects.get(id=id)
+    data.delete()
+    return redirect("home")

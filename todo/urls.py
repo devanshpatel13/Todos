@@ -29,7 +29,8 @@ urlpatterns = [
     path("home/",home,name="home"),
     path("logout/",logout,name="logout"),
     path("ChangePassView/",ChangePassView,name="ChangePassView"),
-
+    path("update/<int:id>",update,name="update"),
+    path("delete/<int:id>",delete,name="delete"),
 
 
     #password reset
